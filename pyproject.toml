@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "t0-ai-language-prototype"
+version = "0.1.0"
+description = "Experimental AI-oriented, typed SSA bytecode and native compiler"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+
+[project.scripts]
+t0 = "t0.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["t0*"]
