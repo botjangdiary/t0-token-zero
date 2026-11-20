@@ -16,3 +16,4 @@ jobs:
       - run: python -m pip install pytest
       - run: python -m pytest -q
       - run: python -m t0 ask '양수만 제곱해서 합산해줘' --data '1,-2,3'
+      - run: python -m t0 reason-bench --json

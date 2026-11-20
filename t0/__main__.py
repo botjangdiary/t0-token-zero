@@ -31,7 +31,7 @@ def _array(src: str) -> list[float]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(prog="t0", description="T0 v0.1 — minimal typed SSA + native compilation")
+    parser = argparse.ArgumentParser(prog="t0", description="T0 v0.2 — typed SSA compiler and T0-R reasoning runtime")
     subs = parser.add_subparsers(dest="command", required=True)
 
     nl = subs.add_parser("nl", help="convert a supported Korean/English phrase to T0")
@@ -76,6 +76,9 @@ def main(argv: list[str] | None = None) -> int:
     run.add_argument("--data", required=True, help="comma-separated or JSON input array")
     run.add_argument("--other", action="append", default=[], help="additional array for dot etc")
     run.add_argument("--backend", choices=("native", "reference"), default="native")
+
+    rbench = subs.add_parser("reason-bench", help="compare full vs dependency-scoped reasoning context (no LLM)")
+    rbench.add_argument("--json", action="store_true", help="print machine-readable results")
 
     args = parser.parse_args(argv)
     try:
@@ -126,6 +129,9 @@ def main(argv: list[str] | None = None) -> int:
             output = compile_native(p, args.output, emit_c=args.emit_c,
                                     optimize_first=not args.no_opt)
             print(f"Native library: {output}")
+        elif args.command == "reason-bench":
+            from .reasoning_bench import main as reasoning_benchmark
+            return reasoning_benchmark(["--json"] if args.json else [])
         elif args.command == "run":
             p = _load(args.source)
             arrays = [_array(args.data)] + [_array(x) for x in args.other]
